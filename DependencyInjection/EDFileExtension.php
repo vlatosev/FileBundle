@@ -15,12 +15,15 @@ use Symfony\Component\DependencyInjection\Loader;
 class EDFileExtension extends Extension
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+
+        $container->setParameter('ed_file.web_image_root', $config['root_image_webdir']);
+        $container->setParameter('image_processor.image_types', $config['image_types']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');

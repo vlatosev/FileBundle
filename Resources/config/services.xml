@@ -5,12 +5,40 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <!--
+    <parameters>
+        <parameter key="ed_file.example.class">ED\FileBundle\Example</parameter>
+    </parameters>
+    -->
+
     <services>
-        <service id="ed_file.example" class="ED\FileBundle\Example">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+        <service id="ed_file.form.upload_widget" class="ED\FileBundle\Form\FileUploadType">
+            <argument type="service" id="security.context" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <tag name="form.type" alias="upload_widget" />
+        </service>
+        <service id="ed_file.form.image_upload_widget" class="ED\FileBundle\Form\ImageUploadType">
+            <tag name="form.type" alias="image_upload_widget" />
+        </service>
+        <service id="ed_image_init.listener" class="ED\FileBundle\EventListener\ImageInitializer">
+            <tag name="doctrine.event_listener" event="prePersist" />
+        </service>
+        <service id="ed_file_upload.listener" class="ED\FileBundle\EventListener\FileUploadSaver">
+            <argument type="service" id="service_container" />
+            <tag name="doctrine.event_subscriber" />
+        </service>
+        <service id="ed_image.listener.file_updated" class="ED\FileBundle\EventListener\FileUpdatedListener">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument>%ed_file.web_image_root%</argument>
+            <tag name="kernel.event_listener" event="ed_file.file_removed" method="onFileUpdated" />
+        </service>
+        <service id="image_processor" class="ED\FileBundle\ImageProcessing\ImageProcessor">
+            <argument>%image_processor.image_types%</argument>
+            <argument type="service" id="router" />
+        </service>
+        <service id="ed_file.twig.image_extension" class="ED\FileBundle\Twig\ImageExtension">
+            <argument type="service" id="router" />
+            <argument type="service" id="image_processor" />
+            <tag name="twig.extension" />
         </service>
     </services>
-    -->
 </container>
