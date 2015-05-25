@@ -1,6 +1,6 @@
 {
   "name" : "vlatosev/filebundle",
-  "description" : "Symfony2 Bundle for doctrine db synchronized file uploads and image manipulation",
+  "description" : "Symfony2 Bundle for doctrine db synchronized file uploads and image manipulation.",
   "type" : "symfony-bundle",
   "authors" : [{
     "name" : "vlatosev",
