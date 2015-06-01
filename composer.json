@@ -1,30 +1,33 @@
 {
-  "name" : "vlatosev/filebundle",
-  "description" : "Symfony2 Bundle for doctrine db synchronized file uploads and image manipulation.",
-  "type" : "symfony-bundle",
-  "authors" : [{
-    "name" : "vlatosev",
-    "email" : "vlatosev@gmail.com"
-  }],
-  "keywords" : [
+  "name": "vlatosev/filebundle",
+  "description": "Symfony2 Bundle for doctrine db synchronized file uploads and image manipulation.",
+  "type": "symfony-bundle",
+  "authors": [
+    {
+      "name": "vlatosev",
+      "email": "vlatosev@gmail.com"
+    }
+  ],
+  "keywords": [
     "file bundle"
   ],
-  "license" : [
+  "license": [
     "MIT"
   ],
-  "require" : {
+  "require": {
   },
-  "autoload" : {
-    "psr-0" : {
-      "ED\\FileBundle" : ""
+  "autoload": {
+    "psr-4": {
+      "ED\\FileBundle": ""
     }
   },
-  "target-dir" : "EDVT/FileBundle",
-  "repositories" : [{
-  }],
-  "extra" : {
-    "branch-alias" : {
-      "dev-master" : "0.1.x-dev"
+  "repositories": [
+    {
+    }
+  ],
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.1.x-dev"
     }
   }
 }
