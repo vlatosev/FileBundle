@@ -19,7 +19,7 @@
       "ED\\FileBundle" : ""
     }
   },
-  "target-dir" : "ED/FileBundle",
+  "target-dir" : "EDVT/FileBundle",
   "repositories" : [{
   }],
   "extra" : {

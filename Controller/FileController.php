@@ -18,6 +18,7 @@ class FileController extends Controller
      */
     public function uploadAction(Request $request)
     {
+      $this->createFormBuilder();
       if (!$request->isXmlHttpRequest()) $this->redirect($this->generateUrl('_homepage'));
       $uploadedFile = $request->get('uploadfile');
       $class        = $request->get('file_class');
