@@ -1,6 +1,6 @@
 <?php
 
-namespace ED\FileBundle\DependencyInjection;
+namespace EDV\FileBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;

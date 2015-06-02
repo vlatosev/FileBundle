@@ -1,5 +1,5 @@
 <?php
-namespace ED\FileBundle\Command;
+namespace EDV\FileBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;

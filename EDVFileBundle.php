@@ -1,9 +1,9 @@
 <?php
 
-namespace ED\FileBundle;
+namespace EDV\FileBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class EDFileBundle extends Bundle
+class EDVFileBundle extends Bundle
 {
 }

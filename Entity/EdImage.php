@@ -1,9 +1,9 @@
 <?php
 
-namespace ED\FileBundle\Entity;
+namespace EDV\FileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use ED\FileBundle\Entity\EdFile;
+use EDV\FileBundle\Entity\EdFile;
 use Imagine\Imagick\Image;
 use Imagine\Imagick\Imagine;
 
@@ -162,7 +162,7 @@ class EdImage
   /**
    * Get file
    *
-   * @return \ED\FileBundle\Entity\EdFile
+   * @return EdFile
    */
   public function getFile()
   {

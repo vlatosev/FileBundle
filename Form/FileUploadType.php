@@ -1,10 +1,10 @@
 <?php
-namespace ED\FileBundle\Form;
+namespace EDV\FileBundle\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
-use ED\FileBundle\Entity\EdFile;
-use ED\FileBundle\Form\Transformers\FileReplaceTransformer;
-use ED\UserBundle\Entity\User;
+use EDV\FileBundle\Entity\EdFile;
+use EDV\FileBundle\Form\Transformers\FileReplaceTransformer;
+use EDV\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

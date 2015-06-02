@@ -1,9 +1,9 @@
 <?php
-namespace ED\FileBundle\ImageProcessing;
+namespace EDV\FileBundle\ImageProcessing;
 
 use Doctrine\Common\Inflector\Inflector;
-use ED\FileBundle\Entity\EdImage;
-use ED\FileBundle\ImageProcessing\Transformers\TransformerInterface;
+use EDV\FileBundle\Entity\EdImage;
+use EDV\FileBundle\ImageProcessing\Transformers\TransformerInterface;
 use Imagine\Imagick\Imagine;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;

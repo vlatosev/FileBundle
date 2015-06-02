@@ -1,10 +1,10 @@
 <?php
 
-namespace ED\FileBundle\Twig;
+namespace EDV\FileBundle\Twig;
 
 
-use ED\FileBundle\Entity\EdImage;
-use ED\FileBundle\ImageProcessing\ImageProcessor;
+use EDV\FileBundle\Entity\EdImage;
+use EDV\FileBundle\ImageProcessing\ImageProcessor;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;

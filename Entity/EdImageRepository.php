@@ -1,6 +1,6 @@
 <?php
 
-namespace ED\FileBundle\Entity;
+namespace EDV\FileBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Imagine\Imagick\Imagine;
@@ -31,7 +31,7 @@ class EdImageRepository extends EntityRepository
    */
   private function uniqueNameExists($fileName)
   {
-    $dql = "SELECT COUNT(image) FROM EDFileBundle:EdImage AS image WHERE image.baseDir = :name";
+    $dql = "SELECT COUNT(image) FROM EDVFileBundle:EdImage AS image WHERE image.baseDir = :name";
     $query = $this->_em->createQuery($dql)->setParameters(array('name' => $fileName));
     $result = $query->getSingleScalarResult();
     return ($result > 0);

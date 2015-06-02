@@ -1,8 +1,8 @@
 <?php
-namespace ED\FileBundle\EventListener;
+namespace EDV\FileBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use ED\FileBundle\Entity\EdImage;
+use EDV\FileBundle\Entity\EdImage;
 
 class ImageInitializer
 {
@@ -11,7 +11,7 @@ class ImageInitializer
     $entity = $args->getEntity();
     if($entity instanceof EdImage)
     {
-      $repo = $args->getEntityManager()->getRepository("EDFileBundle:EdImage");
+      $repo = $args->getEntityManager()->getRepository("EDVFileBundle:EdImage");
       $repo->setImageData($entity);
     }
   }

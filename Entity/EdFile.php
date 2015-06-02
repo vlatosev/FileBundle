@@ -1,6 +1,6 @@
 <?php
 
-namespace ED\FileBundle\Entity;
+namespace EDV\FileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;

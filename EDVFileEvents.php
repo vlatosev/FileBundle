@@ -1,7 +1,7 @@
 <?php
-namespace ED\FileBundle;
+namespace EDV\FileBundle;
 
-final class EdFileEvents
+final class EDVFileEvents
 {
   /**
    * File updated event fires when file is uploaded

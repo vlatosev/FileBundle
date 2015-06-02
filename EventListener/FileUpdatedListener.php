@@ -1,9 +1,9 @@
 <?php
-namespace ED\FileBundle\EventListener;
+namespace EDV\FileBundle\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
-use ED\FileBundle\Event\EdFileEvent;
-use ED\FileBundle\Event\FileUpdatedEvent;
+use EDV\FileBundle\Event\EdFileEvent;
+use EDV\FileBundle\Event\FileUpdatedEvent;
 
 class FileUpdatedListener
 {
@@ -23,6 +23,6 @@ class FileUpdatedListener
   public function onFileUpdated(EdFileEvent $event)
   {
     $file = $event->getFile();
-    $this->em->getRepository("EDFileBundle:EdImage")->cleanOnFileUpdate($file, $this->photodir);
+    $this->em->getRepository("EDVFileBundle:EdImage")->cleanOnFileUpdate($file, $this->photodir);
   }
 }

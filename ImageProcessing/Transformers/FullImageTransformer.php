@@ -1,5 +1,5 @@
 <?php
-namespace ED\FileBundle\ImageProcessing\Transformers;
+namespace EDV\FileBundle\ImageProcessing\Transformers;
 
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;

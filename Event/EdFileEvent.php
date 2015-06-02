@@ -1,7 +1,7 @@
 <?php
-namespace ED\FileBundle\Event;
+namespace EDV\FileBundle\Event;
 
-use ED\FileBundle\Entity\EdFile;
+use EDV\FileBundle\Entity\EdFile;
 use Symfony\Component\EventDispatcher\Event;
 
 class EdFileEvent extends Event

@@ -1,10 +1,10 @@
 <?php
 
-namespace ED\FileBundle\Controller;
+namespace EDV\FileBundle\Controller;
 
-use ED\FileBundle\Entity\EdImage;
-use ED\FileBundle\Entity\EdImageRepository;
-use ED\FileBundle\ImageProcessing\ImageProcessor;
+use EDV\FileBundle\Entity\EdImage;
+use EDV\FileBundle\Entity\EdImageRepository;
+use EDV\FileBundle\ImageProcessing\ImageProcessor;
 use Imagine\Imagick\Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

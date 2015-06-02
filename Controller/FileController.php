@@ -1,9 +1,9 @@
 <?php
 
-namespace ED\FileBundle\Controller;
+namespace EDV\FileBundle\Controller;
 
-use ED\FileBundle\Entity\EdFile;
-use ED\FileBundle\Form\FileUploadType;
+use EDV\FileBundle\Entity\EdFile;
+use EDV\FileBundle\Form\FileUploadType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

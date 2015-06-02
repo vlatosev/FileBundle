@@ -1,7 +1,7 @@
 <?php
-namespace ED\FileBundle\Form;
+namespace EDV\FileBundle\Form;
 
-use ED\FileBundle\Entity\EdImage;
+use EDV\FileBundle\Entity\EdImage;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
