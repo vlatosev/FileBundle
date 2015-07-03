@@ -11,7 +11,7 @@ use Imagine\Imagick\Imagine;
  * EdImage
  *
  * @ORM\Table(name="ed_image")
- * @ORM\Entity(repositoryClass="ED\FileBundle\Entity\EdImageRepository")
+ * @ORM\Entity(repositoryClass="EDV\FileBundle\Entity\EdImageRepository")
  */
 class EdImage
 {
@@ -55,7 +55,7 @@ class EdImage
   /**
    * @var EdFile
    *
-   * @ORM\OneToOne(targetEntity="ED\FileBundle\Entity\EdFile", cascade={"persist", "remove"}, orphanRemoval=true)
+   * @ORM\OneToOne(targetEntity="EDV\FileBundle\Entity\EdFile", cascade={"persist", "remove"}, orphanRemoval=true)
    * @ORM\JoinColumn(name="file_id", nullable=true, onDelete="cascade")
    */
   private $file;
@@ -149,7 +149,7 @@ class EdImage
   /**
    * Set file
    *
-   * @param \ED\FileBundle\Entity\EdFile $file
+   * @param \EDV\FileBundle\Entity\EdFile $file
    * @return EdImage
    */
   public function setFile(EdFile $file = null)
