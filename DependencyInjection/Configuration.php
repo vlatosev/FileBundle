@@ -20,7 +20,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('ed_file_settings');
+        $rootNode = $treeBuilder->root('edv_file_settings');
       /** @var $rootNode ArrayNodeDefinition */
       $rootNode
             ->children()

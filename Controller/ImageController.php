@@ -22,7 +22,7 @@ class ImageController extends Controller
   public function showImageAction($image_base_dir, $image_thumb)
   {
     $em = $this->getDoctrine()->getManager();
-    $repo = $em->getRepository("EDFileBundle:EdImage");
+    $repo = $em->getRepository("EDVFileBundle:EdImage");
     $image = $repo->findOneBy(array('baseDir' => $image_base_dir));
     $imgprocessor = $this->get('image_processor');
     if(!is_null($image))
