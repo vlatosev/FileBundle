@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Router;
 
 class ImageProcessor
 {
-  const TRANSFORMER_CLASS_PATH = 'ED\FileBundle\ImageProcessing\Transformers';
+  const TRANSFORMER_CLASS_PATH = 'EDV\FileBundle\ImageProcessing\Transformers';
 
   protected $image_types = array(
     'original' => array(
