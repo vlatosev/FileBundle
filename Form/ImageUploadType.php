@@ -1,11 +1,9 @@
 <?php
 namespace EDV\FileBundle\Form;
 
-use EDV\FileBundle\Entity\EdImage;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\File;
 
 class ImageUploadType extends AbstractType
 {
@@ -27,8 +25,8 @@ class ImageUploadType extends AbstractType
   public function setDefaultOptions(OptionsResolverInterface $resolver)
   {
     $resolver->setDefaults(array(
-        'data_class' => 'ED\FileBundle\Entity\EdImage',
-        'file_namespace' => 'general-images'
+        'data_class' => null,
+        'file_namespace' => null
     ));
   }
 }

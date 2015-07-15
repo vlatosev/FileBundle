@@ -3,8 +3,7 @@ namespace EDV\FileBundle\Form\Transformers;
 
 use Doctrine\ORM\EntityManagerInterface;
 use EDV\FileBundle\Entity\EdFile;
-use EDV\FileBundle\Entity\EdImage;
-use EDV\UserBundle\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface as User;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

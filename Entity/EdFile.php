@@ -70,11 +70,9 @@ class EdFile
   /**
    * @var integer
    *
-   * @ORM\Column(name="size", type="integer", nullable=true)
+   * @ORM\Column(name="size", type="integer", nullable=false)
    */
   private $size = 0;
-
-  private $removeObjId = null;
 
   /**
    * @var UploadedFile|null
@@ -235,24 +233,23 @@ class EdFile
     return $this->uploadedBy;
   }
 
+  /**
+   * @return null|UploadedFile
+   */
   public function getUploadFile()
   {
     return $this->uploadedFile;
   }
 
+  /**
+   * @param UploadedFile|null $file
+   * @return $this
+   */
   public function setUploadFile(UploadedFile $file = null)
   {
     $this->uploadedFile = $file;
-    $this->extension = $file->getClientOriginalExtension();
-    $this->name = basename($file->getClientOriginalName(), empty($this->extension) ? '' : '.' . $this->extension);
-    $this->size = $file->getSize();
-    $this->mimeType = $file->getMimeType();
-    return $file;
-  }
 
-  public function processRemove()
-  {
-    if($this->isFileExists()) unlink($this->getFilePath());
+    return $this;
   }
 
   /**
@@ -277,37 +274,4 @@ class EdFile
   {
     return $this->mimeType;
   }
-
-  static public function getUploadDir()
-  {
-    $s = DIRECTORY_SEPARATOR;
-    return __DIR__ . "$s..$s..$s..$s..$s" . "uploads";
-  }
-
-  /**
-   * @return string
-   */
-  public function getFilePath()
-  {
-    $name = is_null($this->getId()) ? $this->removeObjId : $this->id;
-    $namespace = empty($this->fileNamespace) ? '/' : DIRECTORY_SEPARATOR . $this->fileNamespace . DIRECTORY_SEPARATOR;
-    $retval = self::getUploadDir() . $namespace . $name;
-    return $retval;
-  }
-
-  /**
-   * @return bool
-   */
-  public function isFileExists()
-  {
-    $retval = file_exists($this->getFilePath());
-    return $retval;
-  }
-
-  public function setForRemoving($removingId)
-  {
-    $this->removeObjId = $removingId;
-  }
-
-
 }

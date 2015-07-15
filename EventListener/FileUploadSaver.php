@@ -5,18 +5,22 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use EDV\FileBundle\EDVFileEvents;
 use EDV\FileBundle\Entity\EdFile;
-use EDV\FileBundle\Entity\EdImage;
 use EDV\FileBundle\Event\EdFileEvent;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FileUploadSaver implements EventSubscriber
 {
-  private $container;
+  /**
+   * @var EventDispatcherInterface
+   */
+  private $dispatcher;
 
-  public function __construct(ContainerInterface $container)
+  private $upload_dir = null;
+
+  public function __construct(EventDispatcherInterface $dispatcher, $root_dir)
   {
-    $this->container = $container;
+    $this->dispatcher = $dispatcher;
+    $this->upload_dir = $root_dir . "/../uploads";
   }
 
   public function getSubscribedEvents()
@@ -43,7 +47,7 @@ class FileUploadSaver implements EventSubscriber
     if($entity instanceof EdFile)
     {
       $entity->processRemove();
-      $this->container->get('event_dispatcher')->dispatch(EDVFileEvents::FILE_REMOVED_EVENT, new EdFileEvent($entity));
+      $this->dispatcher->dispatch(EDVFileEvents::FILE_REMOVED_EVENT, new EdFileEvent($entity));
     }
   }
 
@@ -57,7 +61,7 @@ class FileUploadSaver implements EventSubscriber
       $dir = EdFile::getUploadDir() . $namespace;
       umask(0000);
       $entity->getUploadFile()->move($dir, $entity->getId());
-      $this->container->get('event_dispatcher')->dispatch(EDVFileEvents::FILE_UPDATED_EVENT, new EdFileEvent($entity));
+      $this->dispatcher->dispatch(EDVFileEvents::FILE_UPDATED_EVENT, new EdFileEvent($entity));
     }
   }
 }

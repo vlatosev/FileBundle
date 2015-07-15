@@ -23,7 +23,8 @@
             <tag name="doctrine.event_listener" event="prePersist" />
         </service>
         <service id="ed_file_upload.listener" class="EDV\FileBundle\EventListener\FileUploadSaver">
-            <argument type="service" id="service_container" />
+            <argument type="service" id="event_dispatcher" />
+            <argument>%kernel.root_dir%</argument>
             <tag name="doctrine.event_subscriber" />
         </service>
         <service id="ed_image.listener.file_updated" class="EDV\FileBundle\EventListener\FileUpdatedListener">
@@ -39,6 +40,10 @@
             <argument type="service" id="router" />
             <argument type="service" id="image_processor" />
             <tag name="twig.extension" />
+        </service>
+        <service class="EDV\FileBundle\EventListener\FileUploadSubscriber" id="edv_file.event_listener.fileupload_subscriber">
+            <argument>%kernel.root_dir%/../uploads</argument>
+            <tag name="doctrine.event_subscriber" />
         </service>
     </services>
 </container>

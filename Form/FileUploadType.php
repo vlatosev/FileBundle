@@ -2,14 +2,12 @@
 namespace EDV\FileBundle\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
-use EDV\FileBundle\Entity\EdFile;
 use EDV\FileBundle\Form\Transformers\FileReplaceTransformer;
-use EDV\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Validator\Constraints\Blank;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\File;
 
 class FileUploadType extends AbstractType
@@ -27,7 +25,7 @@ class FileUploadType extends AbstractType
   public function __construct(SecurityContextInterface $context, EntityManagerInterface $em)
   {
     $user = $context->getToken()->getUser();
-    if($user instanceof User)
+    if($user instanceof UserInterface)
     {
       $this->user = $user;
     }
