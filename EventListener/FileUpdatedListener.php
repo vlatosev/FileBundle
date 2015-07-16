@@ -4,25 +4,19 @@ namespace EDV\FileBundle\EventListener;
 use Doctrine\ORM\EntityManagerInterface;
 use EDV\FileBundle\Event\EdFileEvent;
 use EDV\FileBundle\Event\FileUpdatedEvent;
+use EDV\FileBundle\ImageProcessing\ImageManager;
 
 class FileUpdatedListener
 {
-  /**
-   * @var \Doctrine\ORM\EntityManagerInterface
-   */
-  protected $em;
+  protected $imageManager;
 
-  protected $photodir;
-
-  public function __construct(EntityManagerInterface $em = null, $photodir)
+  public function __construct(ImageManager $im)
   {
-    $this->em = $em;
-    $this->photodir = $photodir;
+    $this->imageManager = $im;
   }
 
   public function onFileUpdated(EdFileEvent $event)
   {
-    $file = $event->getFile();
-    $this->em->getRepository("EDVFileBundle:EdImage")->cleanOnFileUpdate($file, $this->photodir);
+    $this->imageManager->updateImage($event->getFile());
   }
 }

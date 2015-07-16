@@ -66,4 +66,152 @@ class EdImage
    * @ORM\Column(name="extension", type="string", length=255, nullable=true)
    */
   private $extension = null;
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set width
+     *
+     * @param integer $width
+     * @return EdImage
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    /**
+     * Get width
+     *
+     * @return integer 
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * Set height
+     *
+     * @param integer $height
+     * @return EdImage
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * Get height
+     *
+     * @return integer 
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * Set processed
+     *
+     * @param boolean $processed
+     * @return EdImage
+     */
+    public function setProcessed($processed)
+    {
+        $this->processed = $processed;
+
+        return $this;
+    }
+
+    /**
+     * Get processed
+     *
+     * @return boolean 
+     */
+    public function getProcessed()
+    {
+        return $this->processed;
+    }
+
+    /**
+     * Set baseDir
+     *
+     * @param string $baseDir
+     * @return EdImage
+     */
+    public function setBaseDir($baseDir)
+    {
+        $this->baseDir = $baseDir;
+
+        return $this;
+    }
+
+    /**
+     * Get baseDir
+     *
+     * @return string 
+     */
+    public function getBaseDir()
+    {
+        return $this->baseDir;
+    }
+
+    /**
+     * Set extension
+     *
+     * @param string $extension
+     * @return EdImage
+     */
+    public function setExtension($extension)
+    {
+        $this->extension = $extension;
+
+        return $this;
+    }
+
+    /**
+     * Get extension
+     *
+     * @return string 
+     */
+    public function getExtension()
+    {
+        return $this->extension;
+    }
+
+    /**
+     * Set file
+     *
+     * @param \EDV\FileBundle\Entity\EdFile $file
+     * @return EdImage
+     */
+    public function setFile(\EDV\FileBundle\Entity\EdFile $file = null)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get file
+     *
+     * @return \EDV\FileBundle\Entity\EdFile 
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
 }

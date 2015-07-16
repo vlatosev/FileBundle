@@ -23,6 +23,8 @@ class EDVFileExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('ed_file.web_image_root', $config['root_image_webdir']);
+        $container->setParameter('ed_file.file_class', $config['file_class']);
+        $container->setParameter('ed_file.image_class', $config['image_class']);
         $container->setParameter('image_processor.image_types', $config['image_types']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));

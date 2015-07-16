@@ -4,6 +4,7 @@ namespace EDV\FileBundle\ImageProcessing;
 use Doctrine\Common\Inflector\Inflector;
 use EDV\FileBundle\Entity\EdImage;
 use EDV\FileBundle\ImageProcessing\Transformers\TransformerInterface;
+use Imagine\Image\ImagineInterface;
 use Imagine\Imagick\Imagine;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -24,6 +25,11 @@ class ImageProcessor
    */
   protected $router = null;
 
+  /**
+   * @var ImagineInterface
+   */
+  protected $imagine;
+
   public function __construct($image_types = array(), Router $router)
   {
     if(is_array($image_types))
@@ -32,6 +38,8 @@ class ImageProcessor
     }
 
     $this->router = $router;
+
+    $this->imagine = extension_loaded('imagick') ? new Imagine() : new \Imagine\Gd\Imagine();
   }
 
   /**
@@ -44,8 +52,7 @@ class ImageProcessor
     $path = !is_null($image) ?
         ($image->getFile()->getMimeType() == 'image/jpeg' ? $this->correctImageOrientation($image->getFile()->getFilePath(), $tmp) : $image->getFile()->getFilePath()) :
         $webroot . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . $this->getDefaultImage($image_type);
-    $imagine = extension_loaded('imagick') ? new Imagine() : new \Imagine\Gd\Imagine();
-    $source = $imagine->open($path);
+    $source = $this->imagine->open($path);
     if(isset($this->image_types[$image_type]))
     {
       $type = $this->image_types[$image_type];
@@ -123,6 +130,11 @@ class ImageProcessor
     else return '';
     $pos = strrpos($retval, '.');
     return $pos === false ? '' : substr($retval, $pos + 1);
+  }
+
+  public function getImagine()
+  {
+    return $this->imagine;
   }
 
 }

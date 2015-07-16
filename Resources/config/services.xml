@@ -13,24 +13,34 @@
     <services>
         <service id="ed_file.form.upload_widget" class="EDV\FileBundle\Form\FileUploadType">
             <argument type="service" id="security.context" />
-            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument>%ed_file.file_class%</argument>
             <tag name="form.type" alias="upload_widget" />
         </service>
         <service id="ed_file.form.image_upload_widget" class="EDV\FileBundle\Form\ImageUploadType">
+            <argument>%ed_file.image_class%</argument>
             <tag name="form.type" alias="image_upload_widget" />
         </service>
-        <service id="ed_image_init.listener" class="EDV\FileBundle\EventListener\ImageInitializer">
-            <tag name="doctrine.event_listener" event="prePersist" />
+        <service class="EDV\FileBundle\FileServices\FileManager" id="edv_file.file_manager">
+            <argument>%kernel.root_dir%/../uploads</argument>
         </service>
-        <service id="ed_file_upload.listener" class="EDV\FileBundle\EventListener\FileUploadSaver">
-            <argument type="service" id="event_dispatcher" />
-            <argument>%kernel.root_dir%</argument>
-            <tag name="doctrine.event_subscriber" />
+
+        <!--<service id="ed_image_init.listener" class="EDV\FileBundle\EventListener\ImageInitializer">-->
+            <!--<tag name="doctrine.event_listener" event="prePersist" />-->
+        <!--</service>-->
+        <!--<service id="ed_file_upload.listener" class="EDV\FileBundle\EventListener\FileUploadSaver">-->
+            <!--<argument type="service" id="event_dispatcher" />-->
+            <!--<argument>%kernel.root_dir%</argument>-->
+            <!--<tag name="doctrine.event_subscriber" />-->
+        <!--</service>-->
+        <service class="EDV\FileBundle\ImageProcessing\ImageManager" id="edv_file.image_processing.image_manager">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
+            <argument id="image_processor" type="service"/>
+            <argument>%ed_file.image_class%</argument>
+            <argument id="edv_file.file_manager" type="service"/>
         </service>
         <service id="ed_image.listener.file_updated" class="EDV\FileBundle\EventListener\FileUpdatedListener">
-            <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument>%ed_file.web_image_root%</argument>
-            <tag name="kernel.event_listener" event="ed_file.file_removed" method="onFileUpdated" />
+            <argument type="service" id="edv_file.image_processing.image_manager" />
+            <tag name="kernel.event_listener" event="ed_file.file_updated" method="onFileUpdated" />
         </service>
         <service id="image_processor" class="EDV\FileBundle\ImageProcessing\ImageProcessor">
             <argument>%image_processor.image_types%</argument>
@@ -42,7 +52,8 @@
             <tag name="twig.extension" />
         </service>
         <service class="EDV\FileBundle\EventListener\FileUploadSubscriber" id="edv_file.event_listener.fileupload_subscriber">
-            <argument>%kernel.root_dir%/../uploads</argument>
+            <argument type="service" id="edv_file.file_manager"/>
+            <argument type="service" id="event_dispatcher" />
             <tag name="doctrine.event_subscriber" />
         </service>
     </services>

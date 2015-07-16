@@ -48,7 +48,7 @@ class EdFile
   /**
    * @var integer
    *
-   * @ORM\ManyToOne(targetEntity="ED\UserBundle\Entity\User", inversedBy="files")
+   * @ORM\ManyToOne(targetEntity="ED\UserBundle\Entity\User")
    * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="cascade")
    */
   private $uploadedBy;

@@ -7,6 +7,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ImageUploadType extends AbstractType
 {
+  private $image_class;
+
+  public function __construct($imgClass)
+  {
+    $this->image_class = $imgClass;
+  }
+
   public function getName()
   {
     return 'image_upload_widget';
@@ -25,7 +32,7 @@ class ImageUploadType extends AbstractType
   public function setDefaultOptions(OptionsResolverInterface $resolver)
   {
     $resolver->setDefaults(array(
-        'data_class' => null,
+        'data_class' => $this->image_class,
         'file_namespace' => null
     ));
   }
