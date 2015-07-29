@@ -10,17 +10,11 @@ namespace EDV\FileBundle\ImageProcessing;
 
 
 use Doctrine\ORM\EntityManagerInterface;
-use EDV\FileBundle\Entity\EdFile;
 use EDV\FileBundle\Entity\EdImage;
-use EDV\FileBundle\FileServices\FileManager;
+use Symfony\Component\HttpFoundation\File\File;
 
 class ImageManager
 {
-  /**
-   * @var EntityManagerInterface
-   */
-  private $em;
-
   private $image_class;
 
   /**
@@ -28,51 +22,44 @@ class ImageManager
    */
   private $imgproc;
 
-  /**
-   * @var FileManager
-   */
-  private $fileman;
-
-  public function __construct(EntityManagerInterface $em, ImageProcessor $img_processor, $imgClass, FileManager $fileManager)
+  public function __construct(ImageProcessor $img_processor, $imgClass)
   {
-    $this->em = $em;
     $this->image_class = $imgClass;
     $this->imgproc = $img_processor;
-    $this->fileman = $fileManager;
   }
 
-  public function updateImage(EdFile $file)
+  public function updateImage(EdImage $image, EntityManagerInterface $em)
   {
-    $image = $this->em->getRepository($this->image_class)->findOneBy([
-        'file' => $file
-    ]);
-    if($image instanceof EdImage)
+    $source = $image->getFile()->getUploadFile();
+    if($source instanceof File)
     {
-      $source = $this->fileman->getFile($file);
-      if(!is_null($source))
+      $imagine = $this->imgproc->getImagine();
+      $file = $imagine->open($source->getPathname());
+      $island = $this->imgproc->isLandscapeOrient($file);
+      if($island)
       {
-        $imagine = $this->imgproc->getImagine();
-        $file = $imagine->open($source->getPathname());
         $image->setWidth($file->getSize()->getWidth());
         $image->setHeight($file->getSize()->getHeight());
-        $image->setProcessed(true);
       }
-      $image->setBaseDir($image->getFile()->getFileNamespace() . '/' . $this->getUniqueCachedName());
-      $image->setExtension($image->getFile()->getExtension());
-      $this->em->persist($image);
-      $this->em->flush();
+      else
+      {
+        $image->setHeight($file->getSize()->getWidth());
+        $image->setWidth($file->getSize()->getHeight());
+      }
+      $image->setProcessed(true);
+      $image->setHashString($this->getUniqueCachedName($em));
+      $image->setArea([]);
     }
   }
 
-  protected function getUniqueCachedName($extension = null)
+  protected function getUniqueCachedName(EntityManagerInterface $em)
   {
-    $extension = empty($extension) ? '' : ".$extension";
     do
     {
       $fileName = uniqid('', true);
-      $fileName = implode('-', array_reverse(explode('.', $fileName))) . $extension;
+      $fileName = implode('-', array_reverse(explode('.', $fileName)));
     }
-    while($this->uniqueNameExists($fileName));
+    while($this->uniqueNameExists($fileName, $em));
     return $fileName;
   }
 
@@ -80,10 +67,10 @@ class ImageManager
    * @param $fileName
    * @return bool
    */
-  protected function uniqueNameExists($fileName)
+  protected function uniqueNameExists($fileName, EntityManagerInterface $em)
   {
-    $dql = "SELECT COUNT(image) FROM EDVFileBundle:EdImage AS image WHERE image.baseDir = :name";
-    $query = $this->em->createQuery($dql)->setParameters(array('name' => $fileName));
+    $dql = "SELECT COUNT(image) FROM EDVFileBundle:EdImage AS image WHERE image.hashString = :name";
+    $query = $em->createQuery($dql)->setParameters(array('name' => $fileName));
     $result = $query->getSingleScalarResult();
     return ($result > 0);
   }

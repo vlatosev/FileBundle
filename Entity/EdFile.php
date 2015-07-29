@@ -4,7 +4,6 @@ namespace EDV\FileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * EdFile
@@ -48,7 +47,7 @@ class EdFile
   /**
    * @var integer
    *
-   * @ORM\ManyToOne(targetEntity="ED\UserBundle\Entity\User")
+   * @ORM\ManyToOne(targetEntity="UploaderInterface")
    * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="cascade")
    */
   private $uploadedBy;
@@ -75,7 +74,7 @@ class EdFile
   private $size = 0;
 
   /**
-   * @var UploadedFile|null
+   * @var File|null
    */
   protected $uploadedFile = null;
 
@@ -234,7 +233,7 @@ class EdFile
   }
 
   /**
-   * @return null|UploadedFile
+   * @return null|File
    */
   public function getUploadFile()
   {
@@ -242,10 +241,10 @@ class EdFile
   }
 
   /**
-   * @param UploadedFile|null $file
+   * @param File|null $file
    * @return $this
    */
-  public function setUploadFile(UploadedFile $file = null)
+  public function setUploadFile(File $file = null)
   {
     $this->uploadedFile = $file;
 

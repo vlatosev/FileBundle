@@ -2,9 +2,8 @@
 namespace EDV\FileBundle\ImageProcessing\Transformers;
 
 use Imagine\Image\Box;
-use Imagine\Image\Color;
+use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
-use Imagine\Imagick\Imagine;
 
 class AddBlankAreaTransformer extends TransformerAbstract
 {
@@ -27,10 +26,9 @@ class AddBlankAreaTransformer extends TransformerAbstract
       }
 
       $wantedsize = new Box($this->width, $this->height);
+      $palette = new RGB();
+      $canvasImage = $this->imagine->create($wantedsize, $palette->color("FFFFFF"));
 
-      $canvasImage = extension_loaded('imagick') ? new Imagine() : new \Imagine\Gd\Imagine();
-      $backcolor = new Color('fff');
-      $canvasImage = $canvasImage->create($wantedsize,$backcolor);
       $xstart = floor(($wantedsize->getWidth()  - $targetbox->getWidth())/2);
       $ystart = floor(($wantedsize->getHeight() - $targetbox->getHeight())/2);
       $startpoint  = new Point($xstart, $ystart);

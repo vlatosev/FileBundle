@@ -10,6 +10,7 @@ namespace EDV\FileBundle\FileServices;
 
 
 use EDV\FileBundle\Entity\EdFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
 
 class FileManager
@@ -18,7 +19,7 @@ class FileManager
 
   public function __construct($rootf)
   {
-    $this->upload_root = $rootf;
+    $this->upload_root = realpath($rootf . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'uploads');
   }
 
   public function moveUploadedFile(EdFile $file)
@@ -41,6 +42,12 @@ class FileManager
    */
   protected function getFileDir(EdFile $file)
   {
-    return $this->upload_root . DIRECTORY_SEPARATOR . $file->getFileNamespace();
+    $path = $this->upload_root . DIRECTORY_SEPARATOR . $file->getFileNamespace();
+    return ($rp = realpath($path)) ? $rp : $path;
+  }
+
+  public function getFileFromPath($path)
+  {
+    return new File(realpath($this->upload_root . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . $path));
   }
 }

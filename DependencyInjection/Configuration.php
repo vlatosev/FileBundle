@@ -30,13 +30,24 @@ class Configuration implements ConfigurationInterface
               ->end()
               ->scalarNode('file_class')
                 ->cannotBeEmpty()
-                ->defaultValue('AppBundle\Entity\File')
+                ->defaultValue('EDV\FileBundle\Entity\File')
               ->end()
               ->scalarNode('image_class')
                 ->cannotBeEmpty()
-                ->defaultValue('AppBundle\Entity\Image')
+                ->defaultValue('EDV\FileBundle\Entity\Image')
+              ->end()
+              ->scalarNode('register_class')
+                ->cannotBeEmpty()
+                ->defaultValue('EDV\FileBundle\Entity\ImageRegister')
               ->end()
               ->arrayNode('image_types')
+                ->validate()
+                  ->ifTrue(function($value){
+                    $thumbname = key($value);
+                    return strstr($thumbname, '.') !== false || strstr($thumbname, ' ') !== false || strstr($thumbname, '/') !== false;
+                  })
+                    ->thenInvalid('Thumb names must not contain blank or "." "/" characters!')
+                  ->end()
                 ->prototype('array')
                   ->children()
                     ->scalarNode('transform')->isRequired()->end()
@@ -46,10 +57,6 @@ class Configuration implements ConfigurationInterface
                   ->end()
               ->end()
             ->end();
-
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
 
         return $treeBuilder;
     }

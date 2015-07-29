@@ -11,61 +11,67 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class ImageController extends Controller
 {
   /**
-   * @Route("/%ed_file.web_image_root%/{image_base_dir}/{image_thumb}", name="show_image", requirements={"image_base_dir" = ".+"})
+   * @Route("/%ed_file.web_image_root%/{namespace}/{image_hash}/{image_thumb}", name="edv_show_image", requirements={"image_thumb" = ".+"})
    */
-  public function showImageAction($image_base_dir, $image_thumb)
+  public function showImageAction($namespace, $image_hash, $image_thumb)
   {
     $em = $this->getDoctrine()->getManager();
     $repo = $em->getRepository("EDVFileBundle:EdImage");
-    $image = $repo->findOneBy(array('baseDir' => $image_base_dir));
-    $imgprocessor = $this->get('image_processor');
-    if(!is_null($image))
+    $image = $repo->findOneBy([
+        'hashString' => $image_hash
+    ]);
+    if($image instanceof EdImage)
     {
-      $image_type = basename($image_thumb, '.' . $image->getExtension());
-    }
-    elseif($image_base_dir == 'defaults')
-    {
-      $image_type = $this->customBasename($image_thumb);
+      $image_type = $this->getImageType($image_thumb);
+      $cacheFile  = $this->get('edv_file.image_cache_manager')->getCachedFile($image->getFile()->getFileNamespace(), $image->getHashString(), $image_thumb);
+      if(is_null($cacheFile))
+      {
+        $source = $this->get('edv_file.file_manager')->getFile($image->getFile());
+        if($image_type != 'original')
+        {
+          $picture = $this->get('image_processor')->getImageThumb($source, $image_type, $image->getArea());
+          $cacheFile = $this->get('edv_file.image_cache_manager')->createFromImagine($picture, $namespace, $image_hash, $image_thumb);
+        }
+        else
+        {
+          $cacheFile = $this->get('edv_file.image_cache_manager')->copyToCache($source, $namespace, $image_hash, $image_thumb);
+        }
+      }
     }
     else throw new ResourceNotFoundException("Image not found!");
-    /** @var $file Image */
-    $ds = DIRECTORY_SEPARATOR;
-    $webroot = dirname($this->container->getParameter("kernel.root_dir"));
-    $file = $imgprocessor->getImageThumb($image, $image_type, $webroot);
-    umask(0000);
-    $image_dir = $webroot . $ds . "web$ds" . $this->container->getParameter('ed_file.web_image_root') . $ds . $image_base_dir;
-    if(!is_dir($image_dir)) $havedir = mkdir($image_dir, 0777, true);
-    else $havedir = true;
-    if($havedir)
-    {
-      $webpath = $image_dir . $ds . $image_thumb;
-      $file->save($webpath);
-      $response = new BinaryFileResponse($webpath);
-    }
-    else throw new FileException("Can't save image file!");
+
+    $response = new BinaryFileResponse($cacheFile);
     return $response;
   }
 
   /**
-   * @Route("/%ed_file.web_image_root%/defaults/{type}", name="show_default_image", requirements={"type" = ".+"})
+   * @Route("/%ed_file.web_image_root%/defaults/{image_thumb}", name="edv_show_default_image", requirements={"image_thumb" = ".+"})
    */
-  public function showDefaultImageAction($type)
+  public function showDefaultImageAction($image_thumb)
   {
-    $processor = $this->get('image_processor');
-    $file = $processor->getDefaultImage($type);
-    return false;
-  }
-
-  private function customBasename($retval)
-  {
-    $pos = strrpos($retval, '.');
-    return $pos === false ? '' : substr($retval, 0, $pos);
+    $type = $this->getImageType($image_thumb);
+    $defaultpath = $this->get('image_processor')->getDefaultImage($type);
+    if(!is_null($defaultpath))
+    {
+      $defaultfile = $this->get('edv_file.file_manager')->getFileFromPath($defaultpath);
+      $defaultpic  = $this->get('image_processor')->getImageThumb($defaultfile, $type);
+      $cacheFile  = $this->get('edv_file.image_cache_manager')->getCachedFile('defaults', null, $image_thumb);
+      if(is_null($cacheFile)) $cacheFile = $this->get('edv_file.image_cache_manager')->createFromImagine($defaultpic, 'defaults', null, $image_thumb);
+      return new BinaryFileResponse($cacheFile);
+    }
+    else
+    {
+      $dims = $this->get('image_processor')->getImageDimensions($type);
+      if(is_null($dims)) return new RedirectResponse('http://placehold.it/150x150');
+      else return new RedirectResponse("http://placehold.it/{$dims['width']}x{$dims['height']}");
+    }
   }
 
   /**
@@ -88,5 +94,12 @@ class ImageController extends Controller
       ];
     }
     throw new NotFoundHttpException('Image not found!');
+  }
+
+  private function getImageType($image_thumb)
+  {
+    $pos = strrpos($image_thumb, '.');
+    if($pos !== false) return substr($image_thumb, 0, $pos);
+    else return $image_thumb;
   }
 }

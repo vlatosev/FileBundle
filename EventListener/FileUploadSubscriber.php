@@ -18,8 +18,8 @@ use EDV\FileBundle\Event\EdFileEvent;
 use EDV\FileBundle\FileServices\FileManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class FileUploadSubscriber implements EventSubscriber
 {
@@ -49,8 +49,40 @@ class FileUploadSubscriber implements EventSubscriber
   {
     return [
       Events::postPersist,
+      Events::postRemove,
+      Events::preRemove,
       Events::postUpdate,
+      Events::prePersist,
+      Events::preUpdate
     ];
+  }
+
+  public function preRemove(LifecycleEventArgs $args)
+  {
+    $entity = $args->getEntity();
+    if($entity instanceof EdFile)
+    {
+      $entity->deleteFile = $this->fman->getFile($entity)->getPathname();
+    }
+  }
+
+  public function postRemove(LifecycleEventArgs $args)
+  {
+    $entity = $args->getEntity();
+    if($entity instanceof EdFile)
+    {
+      if(isset($entity->deleteFile)) unlink($entity->deleteFile);
+    }
+  }
+
+  public function preUpdate(LifecycleEventArgs $args)
+  {
+    $this->preFunction($args);
+  }
+
+  public function prePersist(LifecycleEventArgs $args)
+  {
+    $this->preFunction($args);
   }
 
   public function postUpdate(LifecycleEventArgs $args)
@@ -69,14 +101,41 @@ class FileUploadSubscriber implements EventSubscriber
     if($entity instanceof EdFile && !is_null($entity->getUploadFile()))
     {
       try {
+        $this->dispatcher->dispatch(EDVFileEvents::FILE_UPLOADED_EVENT, new EdFileEvent($entity));
         $this->fman->moveUploadedFile($entity);
-        $this->dispatcher->dispatch(EDVFileEvents::FILE_UPDATED_EVENT, new EdFileEvent($entity));
       }
       catch(\Exception $e) {
         $args->getEntityManager()->remove($entity);
         $args->getEntityManager()->flush();
         throw new FileException($e->getMessage());
       }
+    }
+  }
+
+  private function preFunction(LifecycleEventArgs $args)
+  {
+    $entity = $args->getEntity();
+    if($entity instanceof EdFile && !is_null($entity->getUploadFile()))
+    {
+      $upload = $entity->getUploadFile();
+      if($upload instanceof UploadedFile)
+      {
+        $entity
+            ->setMimeType($upload->getClientMimeType())
+            ->setExtension($upload->getClientOriginalExtension())
+            ->setName(basename($upload->getClientOriginalName(), '.' . $upload->getClientOriginalExtension()))
+            ->setSize($upload->getClientSize());
+      }
+      elseif($upload instanceof File)
+      {
+        $ext = $upload->guessExtension();
+        $entity
+            ->setMimeType($upload->getMimeType())
+            ->setExtension($ext)
+            ->setName(basename($upload->getFilename(), ".$ext"))
+            ->setSize($upload->getSize());
+      }
+
     }
   }
 

@@ -4,6 +4,7 @@ namespace EDV\FileBundle\Twig;
 
 
 use EDV\FileBundle\Entity\EdImage;
+use EDV\FileBundle\FileServices\ImageRouter;
 use EDV\FileBundle\ImageProcessing\ImageProcessor;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -12,19 +13,13 @@ use Symfony\Component\Routing\RouterInterface;
 class ImageExtension extends \Twig_Extension
 {
   /**
-   * @var \Symfony\Component\Routing\RouterInterface
+   * @var ImageRouter
    */
   private $router;
 
-  /**
-   * @var ImageProcessor
-   */
-  private $processor;
-
-  public function __construct(RouterInterface $router, ImageProcessor $processor)
+  public function __construct(ImageRouter $router)
   {
-    $this->router    = $router;
-    $this->processor = $processor;
+    $this->router = $router;
   }
 
   /**
@@ -41,22 +36,7 @@ class ImageExtension extends \Twig_Extension
 
   public function showImage(EdImage $image = null, $type, $absoluteurl = false)
   {
-    if($image instanceof EdImage)
-    {
-      $retval = $this->router->generate("show_image", array(
-        'image_base_dir' => $image->getBaseDir(),
-        'image_thumb'    => $type . '.' . $image->getExtension()
-      ), $absoluteurl ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
-    }
-    elseif(is_null($image))
-    {
-      $retval = $this->router->generate("show_image", array(
-          'image_base_dir' => 'defaults',
-          'image_thumb'    => $type . '.' . $this->processor->getDefaultExtension($type)
-      ), $absoluteurl ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
-    }
-    else throw new ResourceNotFoundException("Wrong parameters!");
-    return $retval;
+    return $this->router->getImageUrl($image, $type, $absoluteurl);
   }
 
   /**
@@ -66,6 +46,6 @@ class ImageExtension extends \Twig_Extension
    */
   public function getName()
   {
-    return 'image_extension';
+    return 'edv_image_extension';
   }
 }

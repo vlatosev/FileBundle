@@ -11,6 +11,7 @@ namespace EDV\FileBundle\Form\Transformers;
 
 use EDV\FileBundle\Entity\EdFile;
 use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -43,17 +44,14 @@ class FileUploadTransformer implements DataTransformerInterface
    */
   public function reverseTransform($value)
   {
-    if($value instanceof EdFile && $value->getUploadFile() instanceof UploadedFile)
+    if($value instanceof EdFile && $value->getUploadFile() instanceof File)
     {
       $upload = $value->getUploadFile();
       if($upload instanceof UploadedFile)
       {
         $value
-            ->setMimeType($upload->getClientMimeType())
-            ->setExtension($upload->getClientOriginalExtension())
-            ->setName($upload->getClientOriginalName())
-            ->setSize($upload->getClientSize())
             ->setUploadedBy($this->user)
+            ->setCreatedAt(new \DateTime())
             ->setFileNamespace($this->namespace);
       }
     }

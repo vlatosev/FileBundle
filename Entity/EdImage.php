@@ -4,14 +4,12 @@ namespace EDV\FileBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use EDV\FileBundle\Entity\EdFile;
-use Imagine\Imagick\Image;
-use Imagine\Imagick\Imagine;
 
 /**
  * EdImage
  *
  * @ORM\Table(name="ed_image")
- * @ORM\Entity(repositoryClass="EDV\FileBundle\Entity\EdImageRepository")
+ * @ORM\Entity()
  */
 class EdImage
 {
@@ -48,9 +46,9 @@ class EdImage
   /**
    * @var string
    *
-   * @ORM\Column(name="base_dir", type="string", length=255, nullable=false, unique=true)
+   * @ORM\Column(name="hash_string", type="string", length=255, nullable=false, unique=true)
    */
-  private $baseDir = '';
+  private $hashString = '';
 
   /**
    * @var EdFile
@@ -61,11 +59,16 @@ class EdImage
   private $file;
 
   /**
-   * @var string
+   * @var array
    *
-   * @ORM\Column(name="extension", type="string", length=255, nullable=true)
+   * @ORM\Column(name="area", type="simple_array")
    */
-  private $extension = null;
+  private $area;
+
+  public function __construct()
+  {
+    $this->area = [];
+  }
 
     /**
      * Get id
@@ -147,49 +150,13 @@ class EdImage
     }
 
     /**
-     * Set baseDir
-     *
-     * @param string $baseDir
-     * @return EdImage
-     */
-    public function setBaseDir($baseDir)
-    {
-        $this->baseDir = $baseDir;
-
-        return $this;
-    }
-
-    /**
-     * Get baseDir
-     *
-     * @return string 
-     */
-    public function getBaseDir()
-    {
-        return $this->baseDir;
-    }
-
-    /**
-     * Set extension
-     *
-     * @param string $extension
-     * @return EdImage
-     */
-    public function setExtension($extension)
-    {
-        $this->extension = $extension;
-
-        return $this;
-    }
-
-    /**
      * Get extension
      *
      * @return string 
      */
     public function getExtension()
     {
-        return $this->extension;
+        return $this->getFile()->getExtension();
     }
 
     /**
@@ -213,5 +180,51 @@ class EdImage
     public function getFile()
     {
         return $this->file;
+    }
+
+    /**
+     * Set hashString
+     *
+     * @param string $hashString
+     * @return EdImage
+     */
+    public function setHashString($hashString)
+    {
+        $this->hashString = $hashString;
+
+        return $this;
+    }
+
+    /**
+     * Get hashString
+     *
+     * @return string 
+     */
+    public function getHashString()
+    {
+        return $this->hashString;
+    }
+
+    /**
+     * Set area
+     *
+     * @param array $area
+     * @return EdImage
+     */
+    public function setArea($area)
+    {
+        $this->area = $area;
+
+        return $this;
+    }
+
+    /**
+     * Get area
+     *
+     * @return array 
+     */
+    public function getArea()
+    {
+        return $this->area;
     }
 }
