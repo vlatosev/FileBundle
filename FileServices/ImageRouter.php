@@ -26,10 +26,16 @@ class ImageRouter
    */
   protected $processor;
 
-  public function __construct(RouterInterface $router, ImageProcessor $processor)
+  /**
+   * @var ImagePublicRegistrator
+   */
+  protected $registrator;
+
+  public function __construct(RouterInterface $router, ImageProcessor $processor, ImagePublicRegistrator $ireg)
   {
     $this->router = $router;
     $this->processor = $processor;
+    $this->registrator = $ireg;
   }
 
   /**
@@ -47,6 +53,7 @@ class ImageRouter
           'image_hash'  => $image->getHashString(),
           'image_thumb' => $type . '.' . $image->getExtension()
       ), $absoluteurl ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
+      $this->registrator->register($image, $type);
     }
     else
     {

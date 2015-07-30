@@ -22,14 +22,11 @@ class ImageController extends Controller
    */
   public function showImageAction($namespace, $image_hash, $image_thumb)
   {
-    $em = $this->getDoctrine()->getManager();
-    $repo = $em->getRepository("EDVFileBundle:EdImage");
-    $image = $repo->findOneBy([
-        'hashString' => $image_hash
-    ]);
+    $image_type = $this->getImageType($image_thumb);
+    $image = $this->get('edv_file.image_registrator')->getRegisteredImage($image_hash, $image_type);
+
     if($image instanceof EdImage)
     {
-      $image_type = $this->getImageType($image_thumb);
       $cacheFile  = $this->get('edv_file.image_cache_manager')->getCachedFile($image->getFile()->getFileNamespace(), $image->getHashString(), $image_thumb);
       if(is_null($cacheFile))
       {

@@ -51,6 +51,10 @@
         <service class="EDV\FileBundle\FileServices\ImageRouter" id="edv_file.image_router">
             <argument type="service" id="router"/>
             <argument type="service" id="image_processor"/>
+            <argument type="service" id="edv_file.image_registrator"/>
+        </service>
+        <service class="EDV\FileBundle\FileServices\ImagePublicRegistrator" id="edv_file.image_registrator">
+            <argument id="doctrine.orm.entity_manager" type="service"/>
         </service>
     </services>
 </container>
